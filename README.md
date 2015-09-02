@@ -29,7 +29,8 @@ will yield "XS1234567890"
 Copy the code and make a new xla file with it.  
 
 ##### What's not to like? #####
-- No comments, no error handling, and no tests, so it's got that going for it.
+- No comments, no error handling, and no tests (so it's got that going for it)
+- String literals interspersed in the code
 - Works only with the auxiliary functions I have written specifically with this in mind (Greenspun's Tenth?)
 - It's not exactly modular, and has one big Select Case statement to do the dispatching
 - Option Base 1 (yuck) -- originally included for compatibility with another library I've since removed.  To be changed.  
