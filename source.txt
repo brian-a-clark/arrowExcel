@@ -1,0 +1,190 @@
+Option Base 1
+ 
+Private nextId
+Private arrowStore As Dictionary
+ 
+Public Function arrow(ParamArray forms())
+    Dim v As Variant
+    For Each form In forms
+        v = evaluateForm(v, form)
+    Next
+    arrow = v
+End Function
+ 
+Public Function genNextId() As Variant
+    nextId = nextId + 1
+    genNextId = "arrowFuncID_" & nextId
+End Function
+ 
+Private Function arrayToArrowComp(arrayinput As Variant)
+    If arrowStore Is Nothing Then
+        Set arrowStore = New Dictionary
+    End If
+       
+    thisId = genNextId
+    arrowStore.Add thisId, arrayinput
+ 
+    arrayToArrowComp = thisId
+End Function
+ 
+Private Function arrowCompToArray(thisId As Variant)
+    If arrowStore Is Nothing Then
+        Set arrowStore = New Dictionary
+    End If
+ 
+    arrowCompToArray = arrowStore(thisId)
+End Function
+ 
+Private Function evaluateForm(v As Variant, form As Variant) As Variant
+   If Left(form, 11) = "arrowFuncID" Then
+        func = arrowCompToArray(form)
+            Select Case func(1)
+                Case "Split"
+                    evaluateForm = Split_(v, func(2))
+                Case "Partition"
+                    evaluateForm = Partition(v, func(2))
+                Case "Filter"
+                    evaluateForm = Filter(v, func(2))
+                Case "First"
+                    evaluateForm = First(v)
+                Case "Second"
+                    evaluateForm = Second(v)
+                Case "Nth"
+                    evaluateForm = Nth(v, func(2))
+                Case "Equal"
+                    evaluateForm = Equal(v, func(2), func(3))
+                Case "Map"
+                    evaluateForm = Map(v, func(2))
+            End Select
+    Else
+        evaluateForm = form
+    End If
+End Function
+ 
+ 
+ 
+Public Function aSplit(delim As String) As Variant
+    aSplit = arrayToArrowComp(Array("Split", "|" & CStr(delim)))
+End Function
+ 
+Public Function Split_(v, delim)
+    newdelim = Mid(delim, 2)
+    Split_ = Split(v, newdelim)
+End Function
+ 
+ 
+ 
+Public Function aEqual(lhs As Variant, rhs As Variant) As Variant
+    aEqual = arrayToArrowComp(Array("Equal", CStr(lhs), CStr(rhs)))
+End Function
+ 
+Public Function Equal(v, lhs_, rhs_)
+    lhs = evaluateForm(v, lhs_)
+    rhs = evaluateForm(v, rhs_)
+    Equal = (lhs = rhs)
+End Function
+ 
+ 
+ 
+Public Function aFilter(pred As Variant)
+    aFilter = arrayToArrowComp(Array("Filter", CStr(pred)))
+End Function
+ 
+Public Function Filter(v, pred)
+    Dim output()
+    startidx = LBound(v)
+    endidx = UBound(v)
+    addidx = 1
+   
+    For i = startidx To endidx
+        keep = evaluateForm(v(i), pred)
+        If keep Then
+            ReDim Preserve output(addidx)
+            output(addidx) = v(i)
+        End If
+    Next
+   
+    Filter = output
+End Function
+ 
+ 
+ 
+Public Function aMap(form As Variant)
+    aMap = arrayToArrowComp(Array("Map", CStr(form)))
+End Function
+ 
+Public Function Map(v, func)
+    Dim output()
+    startidx = LBound(v)
+    endidx = UBound(v)
+    addidx = 1
+   
+    ReDim output(startidx - endidx + 1)
+   
+    For i = startidx To endidx
+        output(i) = evaluateForm(v(i), func)
+    Next
+   
+    Map = output
+End Function
+ 
+ 
+ 
+Public Function aFirst()
+    aFirst = arrayToArrowComp(Array("First"))
+End Function
+ 
+Public Function First(v)
+    First = v(LBound(v))
+End Function
+ 
+ 
+ 
+Public Function aSecond()
+    aSecond = arrayToArrowComp(Array("Second"))
+End Function
+ 
+Public Function Second(v)
+    Second = v(LBound(v) + 1)
+End Function
+ 
+ 
+ 
+Public Function aNth(index As Integer)
+    aNth = arrayToArrowComp(Array("Nth", CStr(index)))
+End Function
+ 
+Public Function Nth(v, index)
+    Nth = v(index)
+End Function
+ 
+ 
+ 
+Public Function aPartition(sizeOfPair As Integer)
+    aPartition = arrayToArrowComp(Array("Partition", CStr(sizeOfPair)))
+End Function
+ 
+Public Function Partition(v As Variant, size As Variant)
+    startidx = LBound(v)
+    endidx = UBound(v)
+    arrayLength = endidx - startidx + 1
+    newArrayLength = CInt((arrayLength / size))
+    Dim output()
+    ReDim output(newArrayLength)
+   
+    vindex = startidx
+    For i = 1 To newArrayLength
+        Dim temp()
+        For j = 1 To size
+            If vindex <= endidx Then
+                ReDim Preserve temp(j)
+                temp(j) = v(vindex)
+                vindex = vindex + 1
+            End If
+        Next
+        output(i) = temp
+    Next
+   
+    Partition = output
+   
+End Function
