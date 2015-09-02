@@ -32,6 +32,7 @@ Copy the code and make a new xla file with it.
 - No comments, no error handling, and no tests, so it's got that going for it.
 - Works only with the auxiliary functions I have written specifically with this in mind (Greenspun's Tenth?)
 - It's not exactly modular, and has one big Select Case statement to do the dispatching
+- Option Base 1 (yuck) -- originally included for compatibility with another library I've since removed.  To be changed.  
 - It's written in VBA, the world's most painful language
 
 See my other projects for better stuff.
