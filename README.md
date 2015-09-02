@@ -3,7 +3,7 @@
 Arrow Excel is a simple VBA library intended to mimic the -> threading macro from Clojure, along with a couple of auxiliary functions (Split, Partition, First, Second, Nth, Filter, Map (sort of, don't get excited)).  I primarily wrote it for the purpose of parsing multi-column datasets downloaded into Excel via the Bloomberg Excel plugin.  
 
 ##### Motivation #####
-Bloomberg's Excel plugin is a little wonky.  One can choose between a) retrieving a single datapoint, which behaves as expected and can be used as the input to another function (within the same cell), and b) retrieving an entire table, whereby the plugin will write a table out over multiple cells.  It is difficult to use the resulting dataset because it can be of variable length, and is limiting, because the formula itself cannot be nested inside another formula. 
+Bloomberg's Excel plugin is a little wonky.  One can choose between a) retrieving a single datapoint, which behaves as expected and can be used as the input to another function (within the same cell), and b) retrieving an entire dataset, whereby the plugin will write a table of data out over multiple cells.  It is difficult to use this resulting dataset because it can be of variable length, and is limiting, because the formula itself cannot be nested inside another formula. 
 
 To get around this I've begun to use the "Aggregate=YES" flag so that the entire table shows up as a single cell value.  The table below of identifer types and identifiers would normally be laid out in a 2x2 grid:
 
